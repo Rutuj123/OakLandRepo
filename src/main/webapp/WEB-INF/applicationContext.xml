@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<beans xsi:schemaLocation="
+ http://www.springframework.org/schema/beans 
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://www.springframework.org/schema/context 
+  http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd"
+xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns="http://www.springframework.org/schema/beans"
+   xmlns:tx="http://www.springframework.org/schema/tx">
+
+<context:component-scan base-package="com.matlab,com.matlab.service,com.matlab.dwr,com.matlab.repository,com.matlab.config"/>
+
+
+<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+
+<property value="com.mysql.cj.jdbc.Driver" name="driverClassName"/>
+
+<property value="jdbc:mysql://localhost:3306/matlab_db" name="url"/>
+
+<property value="root" name="username"/>
+
+<property value="rootMukti@123" name="password"/>
+
+</bean>
+
+
+
+<bean
+class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+id="sessionFactory">
+<property name="dataSource" ref="dataSource"/>
+<property name="hibernateProperties">
+
+
+<props>
+
+<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+<prop key="hibernate.show_sql">true</prop>
+<!--  <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+
+
+</props>
+
+</property>
+
+
+<property name="annotatedClasses">
+
+
+<list>
+
+<value>com.matlab.entity.PersonPrefix</value>
+</list>
+
+</property>
+
+</bean>
+
+<bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+ <property name="sessionFactory"
+                  ref="sessionFactory"/>
+
+</bean>
+<bean id="prefixService" class="com.matlab.service.PrefixService"/>
+<bean id="prefixDwr" class="com.matlab.dwr.PrefixDwr" />
+<tx:annotation-driven transaction-manager="transactionManager"/>
+   
+
+
+</beans>

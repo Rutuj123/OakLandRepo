@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<beans xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx">
+
+<context:component-scan base-package="com.matlab"/>
+<mvc:resources location="/css/" mapping="/css/**"/>
+
+<mvc:resources location="/fonts/" mapping="/fonts/**"/>
+
+<mvc:resources location="/resource/image" mapping="/resource/**"/>
+
+<mvc:resources location="/images/" mapping="/images/**"/>
+
+<mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
+
+
+ <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+<property value="100000000" name="maxUploadSize"/>
+</bean> 
+
+
+<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+
+<property value="com.mysql.cj.jdbc.Driver" name="driverClassName"/>
+
+<property value="jdbc:mysql://localhost:3306/matlab_db" name="url"/>
+
+<property value="root" name="username"/>
+
+<property value="rootMukti@123" name="password"/>
+
+</bean>
+
+
+
+<bean
+class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+id="sessionFactory">
+
+<property name="dataSource" ref="dataSource"/>
+
+
+<property name="hibernateProperties">
+
+
+<props>
+
+<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+<prop key="hibernate.show_sql">true</prop>
+
+ <prop key="hibernate.hbm2ddl.auto">update</prop> 
+
+
+</props>
+
+</property>
+
+
+<property name="annotatedClasses">
+
+
+<list>
+
+<value>com.matlab.entity.PersonPrefix</value>
+<value>com.matlab.entity.Employee</value>
+</list>
+
+</property>
+
+</bean>
+
+<bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+
+        <property name="sessionFactory"
+                  ref="sessionFactory"/>
+
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+   
+
+<mvc:resources location="/resource/" mapping="/resource/**" cache-period="31556926"/>
+
+<mvc:annotation-driven/>
+
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+<property value="/WEB-INF/jsp/" name="prefix"/>
+
+<property value=".jsp" name="suffix"/>
+
+</bean>
+
+<!-- <bean id="jacksonObjectMapper"class="au.edu.unimelb.atcom.transfer.json.mappers.JSONMapper" ></bean> -->
+
+
+</beans>
